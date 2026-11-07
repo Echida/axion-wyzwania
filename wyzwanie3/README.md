@@ -67,3 +67,7 @@ _To be filled in after the experiment._
 ## 5. What would change if…
 
 …the CNOT direction were reversed (control q₁, target q₀)?
+
+**Prediction (written before running the extra experiment; L = 1, with CNOT, 5 seeds):**
+- Rule A: ~50 %. The measured qubit q₀ now depends directly on x₂, which is irrelevant for Rule A and should confuse the model.
+- Rule B: ~62 % (same as the normal direction). Rule B depends symmetrically on both features, so the direction of the CNOT should not matter.
