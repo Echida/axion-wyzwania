@@ -24,18 +24,18 @@ CNOT = np.array([[1, 0, 0, 0],
                  [0, 0, 0, 1],
                  [0, 0, 1, 0]], dtype=complex)
 
-def uygula(durum, kapi, hedef):
-    """Apply a single-qubit gate to qubit `hedef` (0 = left, 1 = right) of a 2-qubit state."""
-    buyuk = np.kron(kapi, I) if hedef == 0 else np.kron(I, kapi)
-    return buyuk @ durum
+def apply_gate(state, gate, target):
+    """Apply a single-qubit gate to qubit `target` (0 = left, 1 = right) of a 2-qubit state."""
+    full = np.kron(gate, I) if target == 0 else np.kron(I, gate)
+    return full @ state
 
-def olc(durum, shots=1000):
+def measure(state, shots=1000):
     """Measure `shots` times: sample basis labels with Born-rule probabilities and count them."""
-    olasilik = np.abs(durum) ** 2
-    n = int(np.log2(len(durum)))
-    etiketler = [format(i, f"0{n}b") for i in range(len(durum))]
-    sonuclar = np.random.choice(etiketler, size=shots, p=olasilik)
-    return {e: int(np.sum(sonuclar == e)) for e in etiketler}
+    probs = np.abs(state) ** 2
+    n = int(np.log2(len(state)))
+    labels = [format(i, f"0{n}b") for i in range(len(state))]
+    outcomes = np.random.choice(labels, size=shots, p=probs)
+    return {l: int(np.sum(outcomes == l)) for l in labels}
 
 if __name__ == "__main__":
     # Test 1: H·H|0> = |0>
@@ -43,8 +43,8 @@ if __name__ == "__main__":
     print("Test 1 passed: H·H|0> = |0>")
 
     # Test 2: Bell state gives only 00 and 11
-    bell = CNOT @ uygula(ket00, H, 0)
-    sayim = olc(bell, shots=1000)
-    print("Bell measurement:", sayim)
-    assert sayim["01"] == 0 and sayim["10"] == 0, "Test 2 failed"
+    bell = CNOT @ apply_gate(ket00, H, 0)
+    counts = measure(bell, shots=1000)
+    print("Bell measurement:", counts)
+    assert counts["01"] == 0 and counts["10"] == 0, "Test 2 failed"
     print("Test 2 passed: only 00 and 11")

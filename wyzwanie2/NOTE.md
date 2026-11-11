@@ -34,7 +34,7 @@ On the equator the probabilities must be 1/2 each, so the amplitudes must be √
 
 ## From probabilities to measurement results (in my simulator)
 
-The probabilities are exact, but a single measurement result is random. My function `olc(state, shots)` works like this:
+The probabilities are exact, but a single measurement result is random. My function `measure(state, shots)` works like this:
 
 1. compute the probabilities |amplitude|² for every basis state (00, 01, 10, 11),
 2. "roll a weighted die" `shots` times with `np.random.choice`; each roll picks **one** label,
